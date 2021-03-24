@@ -6,7 +6,7 @@ require ('Worklog.php');
 /**
  * Class Jira_Helper
  */
-class Helper_Jira
+class HelperJira
 {
     /**
      * @param array $jiraJson
