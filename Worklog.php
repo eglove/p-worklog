@@ -130,20 +130,20 @@ class Worklog
             switch ($this->issueStatus) {
                 case self::DEV_TESTING:
                 case self::IN_PROGRESS:
-                    $assignee = $this->assigneeId ?? self::UNASSIGNED;
+                    $assignee = $this->assigneeId;
                     break;
                 case self::IN_PR:
-                    $assignee = $this->prAssigneeId ?? self::UNASSIGNED;
+                    $assignee = $this->prAssigneeId;
                     break;
                 case self::IN_QA:
-                    $assignee = $this->qaAssigneeId ?? self::UNASSIGNED;
+                    $assignee = $this->qaAssigneeId;
                     break;
                 default:
                     $assignee = self::UNASSIGNED;
             }
         }
 
-        return $assignee;
+        return $assignee ?? self::UNASSIGNED;
     }
 
     private function isEndStatus(): bool
@@ -176,7 +176,7 @@ class Worklog
             }
         }
 
-        return $category;
+        return $category ?? self::NO_CATEGORY;
     }
 
     public function startWorklog(): void
