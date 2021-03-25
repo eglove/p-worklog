@@ -63,7 +63,7 @@ class Worklog
     // @param PrologueWorklog
     public $prologueWorklog;
     // @param JiraWorklog
-    public $jiraWorklog;
+    public $thirdPartyWorklog;
     public $newWorklog;
     public $jiraJson;
     private $issueStatus;
@@ -94,7 +94,7 @@ class Worklog
             $this->prologueWorklog = PrologueWorklog::getUnstoppedWorklog($this->issueKey);
 
             $timeDiff = (new DateTime('now'))->getTimestamp() - $this->prologueWorklog->started_at->getTimestamp();
-            $this->jiraWorklog = new JiraWorklog(
+            $this->thirdPartyWorklog = new JiraWorklog(
                 $this->getAssigneeId(),
                 $this->issueKey,
                 $timeDiff,
@@ -187,6 +187,6 @@ class Worklog
     public function stopWorklog(): void
     {
         $this->prologueWorklog->stop();
-        $this->jiraWorklog->save();
+        $this->thirdPartyWorklog->save();
     }
 }
