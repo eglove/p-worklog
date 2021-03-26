@@ -200,9 +200,9 @@ class Worklog
 
     public function stopWorklog(): void
     {
-        $this->prologueWorklog->started_at = new DateTime('now');
+        $this->prologueWorklog->stopped_at = new DateTime('now');
         $this->thirdPartyWorklog->secondsSpentOnLog =
-            $this->prologueWorklog->started_at - new DateTime('now');
+            $this->prologueWorklog->stopped_at - new DateTime('now');
 
         if ($this->thirdPartyWorklog->secondsSpentOnLog < 60 ||
             $this->thirdPartyWorklog->secondsSpentOnLog > 28800) {
