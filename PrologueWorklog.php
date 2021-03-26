@@ -44,7 +44,7 @@ class PrologueWorklog implements IWorklog
         $this->stopped_at = $stopped_at;
     }
 
-    public function save(): void {
+    public function create(): void {
         $isLogged = $this->logged === true ? 1 : 0;
         $query = "insert into prologue_worklogs.prologue_worklogs 
             (started_at, jira_account_id, status, logged, jira_key, category, stopped_at)
@@ -61,7 +61,7 @@ class PrologueWorklog implements IWorklog
         $this->mysqli->query($query);
     }
 
-    public function stop(): void {
+    public function save(): void {
         $query = 'update prologue_worklogs.prologue_worklogs SET stopped_at = "' . (new DateTime('now'))->format(DATE_ATOM) . '" where jira_key = "' . $this->jira_key . '" and stopped_at IS NULL';
         $this->mysqli->query($query);
     }

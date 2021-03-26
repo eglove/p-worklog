@@ -18,48 +18,62 @@ class Worklog
 {
     public const UNASSIGNED = 'Unassigned';
     public const NO_CATEGORY = 'No Category';
-    public const PEER_REVIEW = 'Peer Review';
-    public const DEVELOPMENT = 'Development';
-    public const IN_PROGRESS = 'In Progress';
-    public const DEV_TESTING = 'Dev Testing';
-    public const IN_PR = 'In PR';
-    public const IN_QA = 'In QA';
-    public const START_TIME_STATUSES = [
-        self::DEVELOPMENT,
-        self::IN_PROGRESS,
+
+    // Start Statuses
+    const DEV_TESTING = 'Dev Testing';
+    const IN_PR = 'In PR';
+    const IN_QA = 'In QA';
+    const IN_PROGRESS = 'In Progress';
+    // Stop Statuses
+    const BACKLOG = 'Backlog';
+    const COMPLETED = 'Completed';
+    const DEPLOYED = 'Deployed';
+    const DONE = 'Done';
+    const FAILED = 'Failed';
+    const HAS_CONFLICT = 'Has Conflict';
+    const NEEDS_DEPLOYMENT = 'Needs Deployment';
+    const NEEDS_PR = 'Needs PR';
+    const NEEDS_QA = 'Needs QA';
+    const READY_FOR_QA = 'Ready for QA';
+    const ON_HOLD = 'On Hold';
+    const OPEN = 'Open';
+    // Other Statuses
+    const CODING = 'Coding';
+    const DEVELOPMENT = 'Development';
+    const PEER_REVIEW = 'Peer Review';
+    const QA = 'QA';
+
+    const WORKFLOW_STATUSES = [self::CODING, self::DEVELOPMENT, self::PEER_REVIEW, self::QA];
+
+    const DEVELOPMENT_STATUSES = [self::CODING, self::DEV_TESTING, self::DEVELOPMENT, self::IN_PROGRESS];
+    const PR_STATUSES = [self::IN_PR, self::PEER_REVIEW];
+    const QA_STAUSES = [self::IN_QA, self::QA];
+
+    const START_TIME_STATUSES = [
+        self::CODING,
         self::DEV_TESTING,
+        self::DEVELOPMENT,
         self::IN_PR,
-        self::IN_QA
+        self::IN_PROGRESS,
+        self::IN_QA,
+        self::PEER_REVIEW,
+        self::QA
     ];
-    public const WORKFLOW_STATUSES = ['Coding', 'Peer Review', 'QA'];
-    public const QA = 'QA';
-    public const OPEN = 'Open';
-    public const ON_HOLD = 'On Hold';
-    public const NEEDS_PR = 'Needs PR';
-    public const NEEDS_QA = 'Needs QA';
-    public const READY_FOR_QA = 'Ready for QA';
-    public const NEEDS_DEPLOYMENT = 'Needs Deployment';
-    public const HAS_CONFLICT = 'Has Conflict';
-    public const DEPLOYED = 'Deployed';
-    public const COMPLETED = 'Completed';
-    public const FAILED = 'Failed';
-    public const BACKLOG = 'Backlog';
-    public const DONE = 'Done';
-    public const END_TIME_STATUSES = [
-        self::OPEN,
-        self::ON_HOLD,
+    const END_TIME_STATUSES = [
+        self::BACKLOG,
+        self::COMPLETED,
+        self::DEPLOYED,
+        self::DONE,
+        self::FAILED,
+        self::HAS_CONFLICT,
+        self::NEEDS_DEPLOYMENT,
         self::NEEDS_PR,
-        self::QA,
         self::NEEDS_QA,
         self::READY_FOR_QA,
-        self::NEEDS_DEPLOYMENT,
-        self::DONE,
-        self::BACKLOG,
-        self::HAS_CONFLICT,
-        self::DEPLOYED,
-        self::COMPLETED,
-        self::FAILED
+        self::ON_HOLD,
+        self::OPEN,
     ];
+
     // @param PrologueWorklog
     public $prologueWorklog;
     // @param JiraWorklog
@@ -130,14 +144,13 @@ class Worklog
 
         if ($this->isStartStatus()) {
             switch ($this->issueStatus) {
-                case self::DEV_TESTING:
-                case self::IN_PROGRESS:
+                case in_array($this->issueStatus, self::DEVELOPMENT_STATUSES, true):
                     $assignee = $this->assigneeId;
                     break;
-                case self::IN_PR:
+                case in_array($this->issueStatus, self::PR_STATUSES, true):
                     $assignee = $this->prAssigneeId;
                     break;
-                case self::IN_QA:
+                case in_array($this->issueStatus, self::QA_STAUSES, true):
                     $assignee = $this->qaAssigneeId;
                     break;
                 default:
@@ -163,14 +176,13 @@ class Worklog
 
         if ($this->isStartStatus()) {
             switch ($this->issueStatus) {
-                case self::DEV_TESTING:
-                case self::IN_PROGRESS:
+                case in_array($this->issueStatus, self::DEVELOPMENT_STATUSES, true):
                     $category = self::DEVELOPMENT;
                     break;
-                case self::IN_PR:
+                case in_array($this->issueStatus, self::PR_STATUSES, true):
                     $category = self::PEER_REVIEW;
                     break;
-                case self::IN_QA:
+                case in_array($this->issueStatus, self::QA_STAUSES, true):
                     $category = self::QA;
                     break;
                 default:
@@ -183,12 +195,22 @@ class Worklog
 
     public function startWorklog(): void
     {
-        $this->prologueWorklog->save();
+        $this->prologueWorklog->create();
     }
 
     public function stopWorklog(): void
     {
-        $this->prologueWorklog->stop();
-        $this->thirdPartyWorklog->save();
+        $this->prologueWorklog->started_at = new DateTime('now');
+        $this->thirdPartyWorklog->secondsSpentOnLog =
+            $this->prologueWorklog->started_at - new DateTime('now');
+
+        if ($this->thirdPartyWorklog->secondsSpentOnLog < 60 ||
+            $this->thirdPartyWorklog->secondsSpentOnLog > 28800) {
+            // Email
+        } else {
+            $this->thirdPartyWorklog->save();
+        }
+
+        $this->prologueWorklog->save();
     }
 }
