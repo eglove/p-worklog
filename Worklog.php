@@ -7,7 +7,8 @@ require('JiraWorklog.php');
 /**
  * Interface IWorklog
  */
-interface IWorklog {
+interface IWorklog
+{
     public function save();
 }
 
@@ -20,36 +21,36 @@ class Worklog
     public const NO_CATEGORY = 'No Category';
 
     // Start Statuses
-    const DEV_TESTING = 'Dev Testing';
-    const IN_PR = 'In PR';
-    const IN_QA = 'In QA';
-    const IN_PROGRESS = 'In Progress';
+    private const DEV_TESTING = 'Dev Testing';
+    private const IN_PR = 'In PR';
+    private const IN_QA = 'In QA';
+    private const IN_PROGRESS = 'In Progress';
     // Stop Statuses
-    const BACKLOG = 'Backlog';
-    const COMPLETED = 'Completed';
-    const DEPLOYED = 'Deployed';
-    const DONE = 'Done';
-    const FAILED = 'Failed';
-    const HAS_CONFLICT = 'Has Conflict';
-    const NEEDS_DEPLOYMENT = 'Needs Deployment';
-    const NEEDS_PR = 'Needs PR';
-    const NEEDS_QA = 'Needs QA';
-    const READY_FOR_QA = 'Ready for QA';
-    const ON_HOLD = 'On Hold';
-    const OPEN = 'Open';
+    private const BACKLOG = 'Backlog';
+    private const COMPLETED = 'Completed';
+    private const DEPLOYED = 'Deployed';
+    private const DONE = 'Done';
+    private const FAILED = 'Failed';
+    private const HAS_CONFLICT = 'Has Conflict';
+    private const NEEDS_DEPLOYMENT = 'Needs Deployment';
+    private const NEEDS_PR = 'Needs PR';
+    private const NEEDS_QA = 'Needs QA';
+    private const READY_FOR_QA = 'Ready for QA';
+    private const ON_HOLD = 'On Hold';
+    private const OPEN = 'Open';
     // Other Statuses
-    const CODING = 'Coding';
-    const DEVELOPMENT = 'Development';
-    const PEER_REVIEW = 'Peer Review';
-    const QA = 'QA';
+    private const CODING = 'Coding';
+    private const DEVELOPMENT = 'Development';
+    private const PEER_REVIEW = 'Peer Review';
+    private const QA = 'QA';
 
-    const WORKFLOW_STATUSES = [self::CODING, self::DEVELOPMENT, self::PEER_REVIEW, self::QA];
+    private const WORKFLOW_STATUSES = [self::CODING, self::DEVELOPMENT, self::PEER_REVIEW, self::QA];
 
-    const DEVELOPMENT_STATUSES = [self::CODING, self::DEV_TESTING, self::DEVELOPMENT, self::IN_PROGRESS];
-    const PR_STATUSES = [self::IN_PR, self::PEER_REVIEW];
-    const QA_STAUSES = [self::IN_QA, self::QA];
+    private const DEVELOPMENT_STATUSES = [self::CODING, self::DEV_TESTING, self::DEVELOPMENT, self::IN_PROGRESS];
+    private const PR_STATUSES = [self::IN_PR, self::PEER_REVIEW];
+    private const QA_STAUSES = [self::IN_QA, self::QA];
 
-    const START_TIME_STATUSES = [
+    private const START_TIME_STATUSES = [
         self::CODING,
         self::DEV_TESTING,
         self::DEVELOPMENT,
@@ -59,7 +60,7 @@ class Worklog
         self::PEER_REVIEW,
         self::QA
     ];
-    const END_TIME_STATUSES = [
+    private const END_TIME_STATUSES = [
         self::BACKLOG,
         self::COMPLETED,
         self::DEPLOYED,
