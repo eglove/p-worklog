@@ -106,11 +106,13 @@ class Worklog
 
     private function isNewWorklog(): bool
     {
+        $this->newWorklog = true;
+
         if (PrologueWorklog::getUnstoppedWorklog($this->issueKey)) {
-            return false;
+            $this->newWorklog = false;
         }
 
-        return true;
+        return $this->newWorklog;
     }
 
     private function isStartStatus(): bool
